@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/Yashs1623/Load_balancer_Fyp/rpc/workerrpc";
+
+message WWhoAmIResponse{
+    string state = 1;
+}
+
+message HealthScoreResponse{
+    float score     = 1;
+}
+
+message HealthMetricResponse{
+    int64 CpuPercent  = 1;
+    int32 MemUsage  = 2;
+    int32 TotalMem  = 3;
+    float MemUsedPercent  = 4;
+    int64 DiskUsage = 5;
+    int64 TotalDisk = 6;
+    float DiskUsagePercent = 7;
+}
+
+message Task {
+    string Name        = 1;
+    string ImageName   = 2;
+    string RunningPort = 3;
+    bool hasSSH = 4;
+}
+
+message Port {
+    string IP = 1;
+    int32 RunningPort = 2;
+    int32 HostPort = 3;
+    string Type = 4;
+}
+
+message RunningTask {
+	string ContainerID = 1;
+	string ImageName = 2;  
+	repeated Port Ports = 3;
+    string State =4;
+}
+
+message RunningTasks {
+    repeated RunningTask containers = 1;
+}
+
+message AddTaskResponse {
+    string ContainerID = 1;
+    string HostPort = 2;
+}
+
+message TerminateTaskRequest{
+    string Name = 1;
+    string ContainerID = 2;
+    string ImageName = 3;
+}
+
+message TerminateTaskResponse{
+    bool success = 1;
+}
+
+message MetricRequest {
+    string ContainerID = 1;
+}
+
+message Tasks {
+    repeated Task tasks = 1;
+}
+
+service WorkerService {
+    rpc WhoAmI(google.protobuf.Empty) returns (WWhoAmIResponse) {}
+    rpc HealthScore(google.protobuf.Empty) returns (HealthScoreResponse) {}
+    rpc HealthMetrics(google.protobuf.Empty) returns (HealthMetricResponse) {}
+    rpc AddTask(Task) returns (AddTaskResponse) {}
+    rpc TerminateTask(TerminateTaskRequest) returns (TerminateTaskResponse) {}
+    rpc GetTasks(google.protobuf.Empty) returns (RunningTasks) {}
+    rpc GetTaskMetrics(MetricRequest) returns (HealthMetricResponse) {}
+}
