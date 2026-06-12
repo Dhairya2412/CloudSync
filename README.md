@@ -1,4 +1,4 @@
-# CloudFlow
+# CloudSync
 
 A tool to deploy docker containers for frontend and backend servers in distributed cloud environments. The types of node in Dockter are:
 <br/> **Master:** Node Responsible for all the orchestration and communication.
